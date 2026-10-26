@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruleta de Circuitos y Resistencias | Física</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#eef7fb;--panel:#ffffff;--ink:#172b3a;--muted:#526b7a;--gold:#ffd166;--cyan:#00a6d6;--pink:#e85d75;--green:#16a879;--purple:#6c63d9}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#d7f1fb 0,#f3f9fc 60%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:12px 17px;font-weight:800;background:var(--gold);color:#20213a;box-shadow:0 4px 0 #c29d25;transition:.15s}button:hover{transform:translateY(-1px)}button:disabled{opacity:.5;cursor:not-allowed;transform:none}.secondary{background:#31566b;color:white;box-shadow:0 4px 0 #203e50}.danger{background:#ff7694;color:#351222;box-shadow:0 4px 0 #bd4a68}.wrap{max-width:1100px;margin:auto;padding:20px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-size:clamp(1.3rem,3vw,2rem);font-weight:1000;letter-spacing:.4px}.brand span{color:var(--cyan)}.tag{color:var(--muted);font-size:.9rem}.panel{background:linear-gradient(145deg,#ffffff,#f4fbff);border:1px solid #b7d9e7;border-radius:24px;padding:clamp(16px,3vw,28px);box-shadow:0 16px 45px #1b536b1a}.screen{display:none}.screen.active{display:block}.intro{max-width:600px;margin:35px auto}.intro h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.03;margin:8px 0 12px}.intro h1 em{font-style:normal;color:var(--cyan)}.field{display:grid;gap:7px;margin:15px 0}.field label{font-weight:800;color:#24495c}.field input,.field select{width:100%;border:1px solid #9bbdcd;background:#ffffff;color:#172b3a;border-radius:12px;padding:13px}.note{font-size:.85rem;color:var(--muted);line-height:1.45}.full{width:100%;margin-top:7px}.gamegrid{display:grid;grid-template-columns:minmax(270px,1fr) minmax(300px,1fr);gap:22px;align-items:center;margin-top:20px}.wheelbox{position:relative;max-width:480px;width:100%;margin:auto}.wheelbox canvas{width:100%;height:auto;display:block;filter:drop-shadow(0 12px 20px #0007)}.pointer{position:absolute;z-index:2;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:43px solid #fff;filter:drop-shadow(0 4px 4px #0008)}.centerwheel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:24%;aspect-ratio:1;border-radius:50%;background:linear-gradient(145deg,#fff,#c8d5ff);border:7px solid #25355c;display:grid;place-items:center;color:#182345;font-size:clamp(1.2rem,4vw,2.4rem);font-weight:1000}.stats{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 18px}.stat{background:#e8f4f9;border:1px solid #bfd9e4;border-radius:13px;padding:9px 13px;flex:1;min-width:85px}.stat small{display:block;color:var(--muted)}.stat strong{font-size:1.3rem}.category{font-size:.78rem;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);font-weight:900}.question{font-size:clamp(1.2rem,2.8vw,1.65rem);line-height:1.25;margin:8px 0 16px}.answers{display:grid;gap:10px}.answer{background:#edf7fb;border:1px solid #b4d5e2;box-shadow:none;color:#17384a;text-align:left;padding:13px 15px;border-radius:13px}.answer.correct{background:#d5f7e8;border-color:#16a879;color:#124b38}.answer.wrong{background:#ffe0e7;border-color:#e85d75;color:#6b2334}.feedback{min-height:62px;margin-top:13px;color:#355668;line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.bar{height:8px;background:#d8eaf1;border-radius:20px;overflow:hidden;margin:12px 0}.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:width .3s}.timerbox{margin:12px 0 16px;padding:12px 14px;background:#e8f4f9;border:1px solid #bfd9e4;border-radius:14px}.timerhead{display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:800}.timerbar{height:12px;background:#d3e5ec;border-radius:20px;overflow:hidden;margin-top:9px;border:1px solid #35466f}.timerbar div{height:100%;width:100%;background:linear-gradient(90deg,#70e3a1,#ffd84d);transition:width .1s linear}.timerbar div.urgent{background:linear-gradient(90deg,#ff9a7a,#ff4f78)}.tiny{font-size:.8rem;color:var(--muted)}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:11px;border-bottom:1px solid #3b4a72}th{color:var(--gold)}.teacherhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.empty{padding:24px;text-align:center;color:var(--muted)}.pill{border-radius:99px;background:#33436b;padding:5px 10px;font-size:.8rem;color:#fff}.footer{text-align:center;color:#5c7888;font-size:.78rem;padding:25px 0}.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}.confetti-layer i{position:absolute;top:-20px;width:9px;height:15px;border-radius:2px;animation:confetti-fall 2.6s ease-in forwards}@keyframes confetti-fall{0%{top:-25px;opacity:1;transform:translateX(0) rotate(0)}100%{top:110vh;opacity:0;transform:translateX(var(--drift)) rotate(900deg)}}.hidden{display:none!important}@media(max-width:760px){.gamegrid{grid-template-columns:1fr}.wheelbox{max-width:390px}.intro{margin:18px auto}.wrap{padding:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div>
+    <div class="brand">⚡ RULETA <span>DE CIRCUITOS Y RESISTENCIAS</span></div>
+    <div class="tag">Desafío de Física · Ley de Ohm, Circuitos y Asociaciones</div>
+  </div>
+  <div class="actions">
+    <button id="musicBtn" class="secondary" type="button">♫ Música: activada</button>
+    <button id="soundBtn" class="secondary" type="button">🔊 Sonidos: activados</button>
+  </div>
+</header>
+<main>
+<section id="registerScreen" class="screen active">
+  <div class="panel intro">
+    <div class="pill">🎯 APRENDE · GIRA · GANA</div>
+    <h1>¿Cuánto sabes de <em>circuitos y resistencia?</em></h1>
+    <p class="note">⚡ Domina la Ley de Ohm, analiza circuitos eléctricos básicos y calcula asociaciones en serie y paralelo. Gira la ruleta y pon a prueba tus habilidades.</p>
+    <form id="registerForm">
+      <div class="field">
+        <label for="studentName">Nombre y apellido del estudiante</label>
+        <input id="studentName" name="studentName" maxlength="80" required autocomplete="name" placeholder="Ej.: Lucía Méndez">
+      </div>
+      <div class="field">
+        <label for="course">Curso</label>
+        <select id="course" required>
+          <option value="">Selecciona tu curso</option>
+          <option>6.º A</option>
+          <option>6.º B</option>
+          <option>6.º C</option>
+        </select>
+      </div>
+      <button class="full" type="submit">¡COMENZAR EL DESAFÍO! ➜</button>
+    </form>
+    <p class="note">Tus resultados se guardan directamente en el sistema.</p>
+    <div class="actions">
+      <button class="secondary" id="teacherEntry" type="button">🔐 Acceso docente</button>
+    </div>
+  </div>
+</section>
+
+<section id="gameScreen" class="screen">
+  <div class="panel">
+    <div class="top">
+      <div>
+        <div class="pill" id="studentBadge">Estudiante</div>
+        <h2 style="margin:10px 0 0">¡Que empiece el desafío!</h2>
+      </div>
+      <div class="stats" style="margin:0">
+        <div class="stat"><small>Puntaje</small><strong id="score">0</strong></div>
+        <div class="stat"><small>Ronda</small><strong id="round">1/15</strong></div>
+        <div class="stat"><small>Racha</small><strong id="streak">0 🔥</strong></div>
+      </div>
+    </div>
+    <div class="bar"><div id="progress"></div></div>
+    <div class="gamegrid">
+      <div>
+        <div class="wheelbox">
+          <div class="pointer"></div>
+          <canvas id="wheel" width="700" height="700" aria-label="Ruleta de tres categorías"></canvas>
+          <div class="centerwheel">⚡</div>
+        </div>
+        <div style="text-align:center;margin-top:12px">
+          <button id="spinBtn" type="button">🎡 GIRAR RULETA</button>
+          <p class="tiny">La ruleta elige tu categoría al azar.</p>
+        </div>
+      </div>
+      <div>
+        <div id="questionArea">
+          <div class="category">LISTO PARA GIRAR</div>
+          <h3 class="question">Gira la ruleta para descubrir tu pregunta.</h3>
+          <p class="note">Cada respuesta correcta suma 3 puntos. ¡Tienes 15 rondas y un banco ampliado de preguntas!</p>
+        </div>
+        <div class="timerbox">
+          <div class="timerhead"><span>⏱ TIEMPO PARA RESPONDER</span><span id="timerText">15 s</span></div>
+          <div class="timerbar"><div id="timerFill"></div></div>
+        </div>
+        <div id="answers" class="answers"></div>
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+        <div class="actions">
+          <button id="nextBtn" class="hidden" type="button">Siguiente ronda ➜</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="resultScreen" class="screen">
+  <div class="panel intro" style="text-align:center">
+    <div style="font-size:3.5rem">🏆</div>
+    <h1>¡Desafío completado!</h1>
+    <p id="resultSummary"></p>
+    <div class="stats">
+      <div class="stat"><small>Puntaje final</small><strong id="finalScore">0</strong></div>
+      <div class="stat"><small>Correctas</small><strong id="finalCorrect">0/15</strong></div>
+    </div>
+    <p class="note">Tu participación ha sido guardada exitosamente.</p>
+    <button id="finishBtn" class="full" type="button">Finalizar</button>
+  </div>
+</section>
+
+<section id="teacherScreen" class="screen">
+  <div class="panel">
+    <div class="teacherhead">
+      <div>
+        <div class="category">PANEL PRIVADO DEL DOCENTE</div>
+        <h2 style="margin:5px 0">Registro de participaciones</h2>
+      </div>
+      <button class="secondary" id="backBtn" type="button">← Volver</button>
+    </div>
+    <div id="teacherLogin">
+      <p class="note">Introduce el código docente para consultar los puntajes.</p>
+      <form id="teacherForm">
+        <div class="field">
+          <label for="teacherCode">Código de ingreso</label>
+          <input id="teacherCode" type="password" inputmode="numeric" required placeholder="Código docente">
+        </div>
+        <button type="submit">Ingresar al panel</button>
+      </form>
+    </div>
+    <div id="teacherData" class="hidden">
+      <div class="stats">
+        <div class="stat"><small>Participaciones</small><strong id="totalStudents">0</strong></div>
+        <div class="stat"><small>Promedio</small><strong id="averageScore">0</strong></div>
+        <div class="stat"><small>Mejor puntaje</small><strong id="bestScore">0</strong></div>
+      </div>
+      <div class="actions" style="margin-bottom:14px">
+        <button id="exportBtn" type="button">⬇ Descargar CSV</button>
+        <button id="refreshRecordsBtn" class="secondary" type="button">🔄 Actualizar datos</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Estudiante</th><th>Curso</th><th>Puntaje</th><th>Correctas</th><th>Fecha</th></tr>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
+      <p class="note">Datos sincronizados en tiempo real.</p>
+    </div>
+  </div>
+</section>
+</main>
+<div class="footer">Recurso didáctico de Física · Ley de Ohm, Circuitos y Resistencias</div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+'use strict';
+
+const SUPABASE_URL = ''; 
+const SUPABASE_ANON_KEY = '';
+
+let supabaseClient = null;
+try {
+  if (window.supabase && SUPABASE_URL && SUPABASE_URL.startsWith('http')) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+} catch (e) {
+  console.warn('Supabase en modo local/desconectado');
+}
+
+const CATS=[
+{name:'Ley de Ohm',short:'LEY DE OHM',color:'#00a6d6'},
+{name:'Circuito básico',short:'CIRCUITO BÁSICO',color:'#16a879'},
+{name:'Asociación de resistencias',short:'ASOCIACIÓN',color:'#6c63d9'}
+];
+
+const QS=[
+[
+{q:'¿Cuál es la expresión matemática fundamental de la Ley de Ohm?',a:['V = I · R','V = I + R','R = V · I'],c:0,e:'La Ley de Ohm establece que el voltaje (V) es igual al producto de la intensidad de corriente (I) por la resistencia (R).'},
+{q:'Una resistencia de 6 Ω se conecta a una fuente de 12 V. ¿Qué corriente circula?',a:['2 A','0,5 A','72 A'],c:0,e:'Aplicando I = V / R = 12 V / 6 Ω = 2 A.'},
+{q:'Por un resistor circulan 3 A y experimenta una caída de potencial de 15 V. ¿Cuál es su resistencia?',a:['5 Ω','45 Ω','0,2 Ω'],c:0,e:'De acuerdo con R = V / I = 15 V / 3 A = 5 Ω.'},
+{q:'Si el voltaje aplicado a un circuito se triplica manteniendo la resistencia constante, la corriente...',a:['Se triplica','Se reduce a un tercio','No cambia'],c:0,e:'La corriente es directamente proporcional al voltaje cuando la resistencia permanece constante (I = V/R).'},
+{q:'¿Qué unidad se utiliza para medir la resistencia eléctrica en el Sistema Internacional?',a:['Ohmio (Ω)','Voltio (V)','Amperio (A)'],c:0,e:'La unidad de resistencia eléctrica en el SI es el ohmio (símbolo Ω).'}
+],
+[
+{q:'¿Qué elementos mínimos componen un circuito eléctrico básico?',a:['Una fuente de energía, conductores y un receptor (carga)','Solo un interruptor y un cable','Únicamente una bombilla sin fuente'],c:0,e:'Todo circuito básico requiere una fuente de tensión, un camino conductor cerrado y un dispositivo que consuma la energía.'},
+{q:'¿Cómo se debe conectar correctamente un voltímetro para medir el voltaje en un componente?',a:['En paralelo','En serie','Sin cerrar el circuito'],c:0,e:'El voltímetro tiene alta resistencia interna y se conecta en paralelo al elemento bajo medición.'},
+{q:'¿Cómo se conecta un amperímetro para medir la intensidad de corriente que pasa por una rama?',a:['En serie','En paralelo','Directamente a los bornes sin carga'],c:0,e:'El amperímetro debe colocarse en serie para que toda la corriente de la rama lo atraviese.'},
+{q:'¿Qué función cumple un interruptor abierto dentro de un circuito?',a:['Interrumpe el paso de la corriente eléctrica','Aumenta al doble la corriente','Duplica el voltaje de la fuente'],c:0,e:'Un interruptor abierto interrumpe la continuidad del camino conductor, impidiendo el flujo de carga.'},
+{q:'¿Cuál es el sentido convencional de la corriente eléctrica en el circuito externo?',a:['Del polo positivo al polo negativo','Del polo negativo al polo positivo','Siempre de abajo hacia arriba'],c:0,e:'Por convención histórica, se asume que la corriente fluye desde el terminal positivo hacia el negativo.'}
+],
+[
+{q:'¿Cómo se calcula la resistencia equivalente ($R_{eq}$) de dos resistencias conectadas en serie?',a:['$R_{eq} = R_1 + R_2$','$R_{eq} = (R_1 \\cdot R_2) / (R_1 + R_2)$','$R_{eq} = R_1 - R_2$'],c:0,e:'En una conexión en serie, las resistencias se suman de forma directa: R_eq = R_1 + R_2.'},
+{q:'Dos resistencias de 4 Ω y 6 Ω están asociadas en serie. ¿Cuál es su resistencia equivalente?',a:['10 Ω','2,4 Ω','20 Ω'],c:0,e:'R_eq = 4 Ω + 6 Ω = 10 Ω.'},
+{q:'¿Cómo se determina la resistencia equivalente de dos resistencias en paralelo?',a:['$R_{eq} = (R_1 \\cdot R_2) / (R_1 + R_2)$','$R_{eq} = R_1 + R_2$','$R_{eq} = R_1 / R_2$'],c:0,e:'Para dos resistores en paralelo, la resistencia equivalente se calcula como el producto dividido entre la suma.'},
+{q:'Dos resistencias iguales de 6 Ω se conectan en paralelo. ¿Cuál es su resistencia equivalente?',a:['3 Ω','12 Ω','6 Ω'],c:0,e:'Al conectar dos resistencias iguales en paralelo, la equivalente es la mitad del valor individual: 6 / 2 = 3 Ω.'},
+{q:'En una asociación de resistencias en serie, ¿qué magnitud eléctrica es idéntica en cada una de ellas?',a:['La intensidad de corriente','El voltaje','La potencia disipada individual'],c:0,e:'En un circuito en serie, la trayectoria es única, por lo que la misma corriente atraviesa cada componente.'}
+]
+];
+
+let soundOn=true,musicOn=true,audioCtx=null,musicTimer=null,spinAngle=0,spinning=false,student=null,score=0,correct=0,streak=0,round=0,current=null,answered=false,usedQuestionIds=new Set(),timerInterval=null,timeLeft=15;
+
+async function getRecords(){
+  if (!supabaseClient) {
+    try { return JSON.parse(localStorage.getItem('ruletaCircuitosRecordsV1') || '[]'); } catch(e) { return []; }
+  }
+  try {
+    const { data, error } = await supabaseClient.from('participaciones_circuitos').select('*').order('created_at', { ascending: false });
+    if (error) return [];
+    return data.map(r => ({name: r.nombre, course: r.curso, score: r.puntaje, correct: r.correctas, date: r.fecha}));
+  } catch(e) { return []; }
+}
+
+async function saveRecord(rec){
+  try {
+    const rs = JSON.parse(localStorage.getItem('ruletaCircuitosRecordsV1') || '[]');
+    rs.push(rec);
+    localStorage.setItem('ruletaCircuitosRecordsV1', JSON.stringify(rs));
+  } catch(e){}
+
+  if (!supabaseClient) return;
+  try {
+    await supabaseClient.from('participaciones_circuitos').insert([
+      { nombre: rec.name, curso: rec.course, puntaje: rec.score, correctas: rec.correct, fecha: rec.date }
+    ]);
+  } catch (error) {}
+}
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function audio(){if(!audioCtx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;audioCtx=new A()}if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
+function tone(freq,dur=.12,type='sine',vol=.07,delay=0){if(!soundOn)return;const a=audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(freq,a.currentTime+delay);g.gain.setValueAtTime(.0001,a.currentTime+delay);g.gain.exponentialRampToValueAtTime(vol,a.currentTime+delay+.015);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+delay+dur);o.connect(g);g.connect(a.destination);o.start(a.currentTime+delay);o.stop(a.currentTime+delay+dur+.03)}
+function sfx(kind){if(!soundOn)return;if(kind==='click')tone(540,.07,'triangle',.04);if(kind==='spin'){[440,520,610,720,850].forEach((f,i)=>tone(f,.07,'square',.025,i*.08))}if(kind==='correct'){const seq=[523,659,784,1046,1318];seq.forEach((f,i)=>tone(f,.24,'triangle',.075,i*.105));tone(1046,.45,'sine',.04,.48)}if(kind==='wrong'){tone(220,.2,'sawtooth',.035);tone(165,.25,'sawtooth',.025,.12)}if(kind==='win'){[523,659,784,1046,1318,1568].forEach((f,i)=>tone(f,.28,'triangle',.07,i*.12))}}
+function confetti(){const layer=document.createElement('div');layer.className='confetti-layer';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);const colors=['#00a6d6','#ffd166','#16a879','#6c63d9','#e85d75'];for(let i=0;i<110;i++){const piece=document.createElement('i');piece.style.left=(Math.random()*100)+'vw';piece.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];piece.style.animationDelay=(Math.random()*.7)+'s';piece.style.animationDuration=(1.8+Math.random()*1.8)+'s';piece.style.setProperty('--drift',((Math.random()-.5)*240)+'px');piece.style.transform='rotate('+(Math.random()*360)+'deg)';layer.appendChild(piece)}setTimeout(()=>layer.remove(),4300)}
+function startMusic(){stopMusic();if(!musicOn)return;const melody=[392,494,587,494,440,523,659,523];let i=0;musicTimer=setInterval(()=>{if(musicOn&&soundOn)tone(melody[i++%melody.length],.22,'sine',.012);},330)}
+function stopMusic(){if(musicTimer)clearInterval(musicTimer);musicTimer=null}
+
+$('musicBtn').onclick=()=>{musicOn=!musicOn;$('musicBtn').textContent='♫ Música: '+(musicOn?'activada':'apagada');if(musicOn)startMusic();else stopMusic()};
+$('soundBtn').onclick=()=>{soundOn=!soundOn;$('soundBtn').textContent=(soundOn?'🔊 Sonidos: activados':'🔇 Sonidos: apagados');if(soundOn&&musicOn)startMusic()};
+
+const canvas=$('wheel'),ctx=canvas.getContext('2d');
+function drawWheel(angle=0){const n=CATS.length,r=canvas.width/2,arc=2*Math.PI/n;ctx.clearRect(0,0,700,700);ctx.save();ctx.translate(r,r);ctx.rotate(angle);for(let i=0;i<n;i++){const a0=-Math.PI/2+i*arc,a1=a0+arc;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r-13,a0,a1);ctx.closePath();ctx.fillStyle=CATS[i].color;ctx.fill();ctx.lineWidth=7;ctx.strokeStyle='#fff';ctx.stroke();ctx.save();ctx.rotate(a0+arc/2);ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='900 22px system-ui';const words=CATS[i].short.split(' ');if(words.length>1){ctx.fillText(words[0],r-45,-4);ctx.fillText(words.slice(1).join(' '),r-45,22)}else ctx.fillText(words[0],r-45,8);ctx.restore()}ctx.beginPath();ctx.arc(0,0,64,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=8;ctx.strokeStyle='#25355c';ctx.stroke();ctx.restore()}drawWheel();
+
+$('registerForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('studentName').value.trim();
+  const course = $('course').value;
+  if(name.length<3||!course){alert('Escribe tu nombre y selecciona tu curso.');return;}
+  student={name,course};
+  score=0;correct=0;streak=0;round=0;usedQuestionIds=new Set();
+  $('studentBadge').textContent=name+' · '+course;
+  updateStats();
+  show('gameScreen');
+  startMusic();
+  sfx('click');
+  resetRound();
+});
+
+function updateStats(){$('score').textContent=score;$('round').textContent=Math.min(round+1,15)+'/15';$('streak').textContent=streak+' 🔥';$('progress').style.width=(round/15*100)+'%'}
+function stopQuestionTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}}
+function startQuestionTimer(){stopQuestionTimer();timeLeft=15;$('timerText').textContent=timeLeft+' s';$('timerFill').style.width='100%';$('timerFill').classList.remove('urgent');timerInterval=setInterval(()=>{if(answered){stopQuestionTimer();return}timeLeft--;$('timerText').textContent=timeLeft+' s';$('timerFill').style.width=(timeLeft/15*100)+'%';if(timeLeft<=5)$('timerFill').classList.add('urgent');if(timeLeft<=0){stopQuestionTimer();answer(-1,null,true)}},1000)}
+function resetRound(){stopQuestionTimer();answered=false;current=null;$('answers').innerHTML='';$('feedback').textContent='';$('nextBtn').classList.add('hidden');$('spinBtn').disabled=false;$('questionArea').innerHTML='<div class="category">PREGUNTA '+(round+1)+' DE 15</div><h3 class="question">Gira la ruleta para descubrir tu categoría.</h3><p class="note">Cada respuesta correcta suma 3 puntos. Dispones de 15 segundos por pregunta.</p>';updateStats()}
+function chooseQuestion(cat){const available=QS[cat].map((q,i)=>({q,i,id:cat+'-'+i})).filter(x=>!usedQuestionIds.has(x.id));if(!available.length){QS[cat].forEach((q,i)=>usedQuestionIds.delete(cat+'-'+i));return chooseQuestion(cat)}const item=available[Math.floor(Math.random()*available.length)];usedQuestionIds.add(item.id);return item.q}
+
+$('spinBtn').onclick=()=>{if(spinning||answered)return;audio();spinning=true;$('spinBtn').disabled=true;sfx('spin');const chosen=Math.floor(Math.random()*CATS.length),arc=2*Math.PI/CATS.length;const desired=((-(chosen*arc+arc/2))%(Math.PI*2)+Math.PI*2)%(Math.PI*2);const start=spinAngle,extra=Math.PI*2*(5+Math.floor(Math.random()*3)),delta=extra+((desired-start%(Math.PI*2)+Math.PI*2)%(Math.PI*2)),begin=performance.now(),duration=3600;function frame(now){const t=Math.min(1,(now-begin)/duration),ease=1-Math.pow(1-t,4);spinAngle=start+delta*ease;drawWheel(spinAngle);if(t<1)requestAnimationFrame(frame);else{spinAngle=spinAngle%(Math.PI*2);drawWheel(spinAngle);spinning=false;current={cat:chosen,q:chooseQuestion(chosen)};renderQuestion();}}requestAnimationFrame(frame)};
+
+function renderQuestion(){const cat=CATS[current.cat],q=current.q;const choices=q.a.map((text,index)=>({text,correct:index===q.c}));for(let k=choices.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[choices[k],choices[j]]=[choices[j],choices[k]]}q.a=choices.map(x=>x.text);q.c=choices.findIndex(x=>x.correct);$('questionArea').innerHTML='<div class="category" style="color:'+cat.color+'">'+cat.name+'</div><h3 class="question">'+q.q+'</h3><p class="tiny">Elige una sola respuesta antes de que termine el tiempo.</p>';$('answers').innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+') '+a;b.onclick=()=>answer(i,b);$('answers').appendChild(b)});$('feedback').textContent='';startQuestionTimer()}
+
+function answer(i,btn,timedOut=false){if(answered)return;answered=true;stopQuestionTimer();const q=current.q,buttons=[...$('answers').querySelectorAll('button')];buttons.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});if(!timedOut&&i===q.c){score+=3;correct++;streak++;sfx('correct');if(streak%3===0)confetti();$('feedback').innerHTML='<strong style="color:var(--green)">¡Correcto! (+3 pts)</strong> '+q.e}else{streak=0;sfx('wrong');$('feedback').innerHTML='<strong style="color:var(--pink)">'+(timedOut?'¡Tiempo agotado!':'Incorrecto')+'</strong> '+q.e}
+$('nextBtn').classList.remove('hidden');if(round===14)$('nextBtn').textContent='Ver resultados finales 🏆';}
+
+$('nextBtn').onclick=()=>{round++;if(round>=15){endGame()}else{resetRound()}};
+
+async function endGame(){
+  stopMusic();
+  sfx('win');
+  confetti();
+  show('resultScreen');
+  $('resultSummary').textContent='¡Excelente trabajo, '+student.name+'! Completaste el desafío de circuitos eléctricos.';
+  $('finalScore').textContent=score;
+  $('finalCorrect').textContent=correct+'/15';
+  const rec={name:student.name,course:student.course,score:score,correct:correct+'/15',date:new Date().toLocaleDateString()};
+  await saveRecord(rec);
+}
+
+$('finishBtn').onclick=()=>{window.location.reload()};
+$('teacherEntry').onclick=()=>{show('teacherScreen');$('teacherCode').value='';$('teacherData').classList.add('hidden');$('teacherForm').classList.remove('hidden')};
+$('backBtn').onclick=()=>{show('registerScreen')};
+
+$('teacherForm').addEventListener('submit',async (e)=>{
+  e.preventDefault();
+  if($('teacherCode').value.trim()==='2026'){
+    $('teacherForm').classList.add('hidden');
+    $('teacherData').classList.remove('hidden');
+    await loadTeacherRecords();
+  }else{alert('Código incorrecto');}
+});
+
+async function loadTeacherRecords(){
+  const records=await getRecords();
+  const total=records.length;
+  $('totalStudents').textContent=total;
+  if(total>0){
+    const avg=(records.reduce((a,b)=>a+b.score,0)/total).toFixed(1);
+    const best=Math.max(...records.map(r=>r.score));
+    $('averageScore').textContent=avg;
+    $('bestScore').textContent=best;
+  }else{
+    $('averageScore').textContent='0';
+    $('bestScore').textContent='0';
+  }
+  const tbody=$('recordsBody');tbody.innerHTML='';
+  if(!total){tbody.innerHTML='<tr><td colspan="6" class="empty">No hay registros guardados todavía.</td></tr>';return}
+  records.forEach((r,i)=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.course+'</td><td><strong>'+r.score+'</strong></td><td>'+r.correct+'</td><td>'+r.date+'</td>';tbody.appendChild(tr)});
+}
+
+$('refreshRecordsBtn').onclick=loadTeacherRecords;
+$('exportBtn').onclick=async()=>{
+  const records=await getRecords();
+  if(!records.length){alert('No hay datos para exportar');return}
+  let csv='Estudiante,Curso,Puntaje,Correctas,Fecha\n';
+  records.forEach(r=>{csv+='"'+r.name+'","'+r.course+'",'+r.score+',"'+r.correct+'","'+r.date+'"\n'});
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='resultados_circuitos.csv';a.click();
+};
+});
+</script>
+</body>
+</html>
